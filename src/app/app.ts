@@ -53,7 +53,17 @@ import * as QRCode from 'qrcode';
 
             <div class="grid grid-cols-2 gap-4">
               <div>
-                <label class="block text-sm font-medium text-neutral-300 mb-2">Opacity: {{dotOpacity}}%</label>
+                <label class="block text-sm font-medium text-neutral-300 mb-2">BG Opacity: {{bgOpacity}}%</label>
+                <input
+                  type="range"
+                  min="0" max="100"
+                  [(ngModel)]="bgOpacity"
+                  (ngModelChange)="generateQR()"
+                  class="w-full accent-[#ff3333]"
+                />
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-neutral-300 mb-2">Dot Opacity: {{dotOpacity}}%</label>
                 <input 
                   type="range" 
                   min="10" max="100" 
@@ -106,6 +116,7 @@ export class App implements AfterViewInit {
   
   url = 'https://your-website.com';
   dotColor = '#ffffff';
+  bgOpacity = 100;
   dotOpacity = 100;
   blendMode = 'source-over';
   bgImage: HTMLImageElement | null = null;
@@ -161,7 +172,9 @@ export class App implements AfterViewInit {
         const scale = Math.max(canvas.width / this.bgImage.width, canvas.height / this.bgImage.height);
         const x = (canvas.width / 2) - (this.bgImage.width / 2) * scale;
         const y = (canvas.height / 2) - (this.bgImage.height / 2) * scale;
+        ctx.globalAlpha = this.bgOpacity / 100;
         ctx.drawImage(this.bgImage, x, y, this.bgImage.width * scale, this.bgImage.height * scale);
+        ctx.globalAlpha = 1;
       } else {
         ctx.fillStyle = '#111111';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
